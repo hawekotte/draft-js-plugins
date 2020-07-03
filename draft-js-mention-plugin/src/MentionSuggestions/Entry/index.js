@@ -11,17 +11,37 @@ export default class Entry extends Component {
   constructor(props) {
     super(props);
     this.mouseDown = false;
+    this.touchDown = false;
   }
 
   componentDidUpdate() {
     this.mouseDown = false;
+    this.touchDown = false;
   }
 
-  onTouchStart = event => {
+  onTouchEnd = event => {
+    event.preventDefault();
+
     // this fixes an issue with onMouseDown and onMouseUp events not firing on mobile devices, making it
     // difficult if not impossible to tap on entries to select them
+    if (this.touchDown) {
+      this.props.onMentionSelect(this.props.mention);
+      this.touchDown = false;
+    }
+  };
+
+  onTouchMove = event => {
+    // Note: important to avoid a content edit change
     event.preventDefault();
-    this.props.onMentionSelect(this.props.mention);
+
+    this.touchDown = false;
+  };
+
+  onTouchStart = event => {
+    // Note: important to avoid a content edit change
+    event.preventDefault();
+
+    this.touchDown = true;
   };
 
   onMouseUp = () => {
@@ -52,9 +72,11 @@ export default class Entry extends Component {
       <EntryComponent
         className={className}
         onTouchStart={this.onTouchStart}
-        onMouseDown={this.onMouseDown}
-        onMouseUp={this.onMouseUp}
-        onMouseEnter={this.onMouseEnter}
+        onTouchEnd={this.onTouchEnd}
+        onTouchMove={this.onTouchMove}
+        // onMouseDown={this.onMouseDown}
+        // onMouseUp={this.onMouseUp}
+        // onMouseEnter={this.onMouseEnter}
         role="option"
         id={id}
         aria-selected={isFocused ? 'true' : null}
