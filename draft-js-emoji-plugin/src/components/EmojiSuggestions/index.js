@@ -74,8 +74,8 @@ export default class EmojiSuggestions extends Component {
     const anchorOffset = selection.getAnchorOffset();
 
     // the list should not be visible if a range is selected or the editor has no focus
-    if (!selection.isCollapsed() || !selection.getHasFocus())
-      return removeList();
+    // if (!selection.isCollapsed() || !selection.getHasFocus())
+    //   return removeList();
 
     // identify the start & end positon of each search-text
     const offsetDetails = searches.map(offsetKey => decodeOffsetKey(offsetKey));
